@@ -1,0 +1,1 @@
+include ':app', ':sharelib', ':pickerview', ':ucrop', ':picture_library'
