@@ -455,6 +455,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         wheelTime.setTextColorOut(textColorOut);
         wheelTime.setTextColorCenter(textColorCenter);
         wheelTime.isCenterLabel(isCenterLabel);
+
     }
 
 

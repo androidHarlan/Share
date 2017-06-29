@@ -32,4 +32,5 @@ dependencies {
     compile project(':picture_library')
     compile project(':ucrop')
     compile files('libs/butterknife-7.0.1.jar')
+    compile 'com.google.code.gson:gson:2.7'
 }

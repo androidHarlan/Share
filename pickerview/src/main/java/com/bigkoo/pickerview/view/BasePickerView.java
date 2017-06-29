@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import com.bigkoo.pickerview.R;
@@ -336,6 +339,7 @@ public class BasePickerView {
                     }
                 }
             });
+
         }
 
     }
@@ -349,6 +353,7 @@ public class BasePickerView {
     public void dismissDialog() {
         if (mDialog != null) {
             mDialog.dismiss();
+
         }
     }
 
