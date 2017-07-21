@@ -33,4 +33,5 @@ dependencies {
     compile project(':ucrop')
     compile files('libs/butterknife-7.0.1.jar')
     compile 'com.google.code.gson:gson:2.7'
+    compile 'com.airbnb.android:lottie:2.1.0'
 }

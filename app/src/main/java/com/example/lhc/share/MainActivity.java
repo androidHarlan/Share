@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieComposition;
+import com.airbnb.lottie.OnCompositionLoadedListener;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.bigkoo.pickerview.listener.CustomListener;
@@ -25,7 +28,12 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.umeng.socialize.media.UMImage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,8 +63,12 @@ public class MainActivity extends AppCompatActivity {
     Button choseitem;
     @Bind(R.id.customtime)
     Button customtime;
+    @Bind(R.id.Lottie)
+    Button Lottie;
+    @Bind(R.id.animation_view)
+    LottieAnimationView animation_view_network;
     private ShareUtils su;
-    TimePickerView pvTime,pvCustomTime;
+    TimePickerView pvTime, pvCustomTime;
     private List<LocalMedia> selectList = new ArrayList<>();
     private static final int REQUEST_CAMERA_CODE = 10;
     private static final int REQUEST_TAKE_PHOTO = 20;
@@ -82,6 +94,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void setComposition(LottieComposition composition) {
+        animation_view_network.setProgress(0);
+        animation_view_network.loop(true);
+        animation_view_network.setComposition(composition);
+        animation_view_network.playAnimation();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        animation_view_network.cancelAnimation();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -110,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     private int themeId = R.style.picture_QQ_style;
     private int chooseMode = PictureMimeType.ofAll();
 
-    @OnClick({R.id.customtime,R.id.choseitem, R.id.city, R.id.muthchose, R.id.time, R.id.share, R.id.chose})
+    @OnClick({R.id.Lottie, R.id.customtime, R.id.choseitem, R.id.city, R.id.muthchose, R.id.time, R.id.share, R.id.chose})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.share:
@@ -119,6 +143,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.muthchose:
 
                 initNoLinkOptionsPicker();
+                break;
+            case R.id.Lottie:
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(getFromAssets("Hello World.json"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                LottieComposition.Factory.fromJson(getResources(),json , new OnCompositionLoadedListener() {
+                    @Override
+                    public void onCompositionLoaded(LottieComposition composition) {
+                        setComposition(composition);
+                    }
+                });
+
                 break;
             case R.id.city:
                 ShowCityPickerView();
@@ -251,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
         pvOptions.setPicker(options1Items, options2Items, options3Items);//三级选择器
         pvOptions.show();
     }
+
     private void initCustomTimePicker() {
 
         /**
@@ -271,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
         pvCustomTime = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {//选中事件回调
-                Toast.makeText(MainActivity.this,getTime(date),Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, getTime(date), Toast.LENGTH_LONG).show();
             }
         })
                 /*.setType(TimePickerView.Type.ALL)//default is all
@@ -552,6 +592,23 @@ public class MainActivity extends AppCompatActivity {
             options3Items.add(Province_AreaList);
         }
 
+
+    }
+
+    public String getFromAssets(String fileName) {
+        String Result = "";
+        try {
+            InputStreamReader inputReader = new InputStreamReader(getResources().getAssets().open(fileName));
+            BufferedReader bufReader = new BufferedReader(inputReader);
+            String line = "";
+
+            while ((line = bufReader.readLine()) != null)
+                Result += line;
+            return Result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result;
 
     }
 
